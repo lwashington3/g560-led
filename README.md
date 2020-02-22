@@ -1,4 +1,4 @@
-# Logitech Prodigy Mouse LED control
+# Logitech G560 Gaming Speakers LED control
 
 Allows you to control the LED lighting of your G560 Gaming Speakers programmatically.
 Inspired by and based on [g810-led](https://github.com/MatMoul/g810-led) and
