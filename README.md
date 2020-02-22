@@ -1,8 +1,8 @@
 # Logitech Prodigy Mouse LED control
 
-Allows you to control the LED lighting of your G203 Prodigy Mouse programmatically.
+Allows you to control the LED lighting of your G560 Gaming Speakers programmatically.
 Inspired by and based on [g810-led](https://github.com/MatMoul/g810-led) and
-[g203-led](https://github.com/smasty/g203-led).
+[g203-led](https://github.com/smasty/g203-led) and [g403-led](https://github.com/stelcheck/g403-led).
 
 ## Requirements
 
@@ -18,22 +18,21 @@ Inspired by and based on [g810-led](https://github.com/MatMoul/g810-led) and
 4. Run (as root) the script for your model:
     - `sudo ./g203-led.py solid 00FFFF`
     - `sudo ./g403-led.py solid 00FFFF`
+    - `sudo ./g560-led.py solid 00FFFF`
 
-Note that the g403 has to independent lights: one on the scroll
-wheel, and one on the mouse itself. This script will set both
-lights to use the same configuration, but it can be
-customized to set them independently.
+Note that the g560 has four independent lights: currently this script will set all
+to the same color.
 
 ## Usage
 
-Make sure to use the script for your mouse model. The example below uses the `g403-led` script.
+Make sure to use the script for your mouse model. The example below uses the `g560-led` script.
 
 ```text
 Usage:
-    g403-led solid {color} - Solid color mode
-    g403-led cycle [{rate} [{brightness}]] - Cycle through all colors
-    g403-led breathe {color} [{rate} [{brightness}]] - Single color breathing
-    g403-led intro {on|off} - Enable/disable startup effect
+    g560-led solid {color} - Solid color mode
+    g560-led cycle [{rate} [{brightness}]] - Cycle through all colors
+    g560-led breathe {color} [{rate} [{brightness}]] - Single color breathing
+    g560-led intro {on|off} - Enable/disable startup effect / **NOT SUPPORTED**
 
 Arguments:
     Color: RRGGBB (RGB hex value)
