@@ -2,30 +2,28 @@
 
 Allows you to control the LED lighting of your G560 Gaming Speakers programmatically.
 Inspired by and based on [g810-led](https://github.com/MatMoul/g810-led) and
-[g203-led](https://github.com/smasty/g203-led) and [g403-led](https://github.com/stelcheck/g403-led).
+[g203-led](https://github.com/smasty/g203-led) and [g403-led](https://github.com/stelcheck/g403-led) and [g560-led](https://github.com/mijoe/g560-led).
 
 ## Requirements
 
-- Python 3.5+
+- Python 3.11+
 - PyUSB 1.0.2+
 - **Root privileges**
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/smasty/g203-led.git`
-2. Prepare _virtualenv_: `virtualenv ./env`
-3. Install dependencies: `env/bin/pip install -r requirements.txt`
-4. Run (as root) the script for your model:
-    - `sudo ./g203-led.py solid 00FFFF`
-    - `sudo ./g403-led.py solid 00FFFF`
-    - `sudo ./g560-led.py solid 00FFFF`
+1. Install the package: `python3.11 -m pip install --upgrade git+https://github.com/lwashington3/g560-led.git`
+2. Run (as root) the script for your model:
+    - `sudo g203 solid 00FFFF`
+    - `sudo g403 solid 00FFFF`
+    - `sudo g560 solid 00FFFF`
 
 Note that the g560 has four independent lights: currently this script will set all
 to the same color.
 
 ## Usage
 
-Make sure to use the script for your mouse model. The example below uses the `g560-led` script.
+Make sure to use the script for your speaker model. The example below uses the `g560-led` script.
 
 ```text
 Usage:

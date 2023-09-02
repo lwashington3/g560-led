@@ -23,10 +23,16 @@ from usb.util import claim_interface, release_interface
 
 
 class SpeakerLocation(StrEnum):
-	Left_Secondary = '00'
+	Left_Secondary	= '00'
 	Right_Secondary = '01'
-	Left_Primary = '02'
-	Right_Primary = '03'
+	Left_Primary	= '02'
+	Right_Primary	= '03'
+
+
+class LEDMode(StrEnum):
+	Solid	= "01"
+	Cycle	= "02"
+	Breathe = "04"
 
 
 class LogiBase(ABC):
@@ -66,7 +72,7 @@ class LogiBase(ABC):
 		if not rate:
 			rate = self.default_rate
 		try:
-			return f"{max(100, min(65535, int(rate))):04x}"
+			return '{:04x}'.format(max(100, min(65535, int(rate))))
 		except ValueError:
 			raise ValueError("Invalid rate specified.")
 
@@ -80,7 +86,7 @@ class LogiBase(ABC):
 
 	@staticmethod
 	def process_color(color):
-		return Color(rgba=color).rgb.replace("#", "")  # TODO: Check if this can be RGBA instead of RGB
+		return Color(rgba=color).rgb.replace("#", "")
 
 	def send_command(self, data):
 		self.send_commands([data])
@@ -146,28 +152,28 @@ class G560(LogiBase):
 		if not color:
 			raise ValueError("No color option given for setting the solid LED color.")
 		color = self.process_color(color)
-		return self.set_led('01', f'{color}0000000000')
+		return self.set_led(LEDMode.Solid, f'{color}0000000000')
 
 	def set_led_breathe(self, color, rate, brightness):
 		color = self.process_color(color)
-		rate = self.process_rate(rate),
+		rate = self.process_rate(rate)
 		brightness = self.process_brightness(brightness)
 
-		return self.set_led('04', f"{color}{rate}00{brightness}00")
-		# return self.set_led('04', color + rate + '00' + brightness + '00')
+		return self.set_led(LEDMode.Breathe, f"{color}{rate}00{brightness}00")
 
 	def set_led_cycle(self, rate, brightness):
-		rate = self.process_rate(rate),
+		rate = self.process_rate(rate)
 		brightness = self.process_brightness(brightness)
 
-		self.logger.info(f"Cycle info: Rate={rate}\tBrightness={brightness}", extra={"rate": rate, "brightness": brightness})	# TODO: Check how extra works
-		return self.set_led('02', f"0000000000{rate}{brightness}")
+		self.logger.info(f"Cycle info: Rate={rate}\tBrightness={brightness}", extra={"rate": rate, "brightness": brightness})
+		return self.set_led(LEDMode.Cycle, f"0000000000{rate}{brightness}")
 
-	def set_led(self, mode, data):
+	def set_led(self, mode:LEDMode, data):
 		prefix = '11ff043a'
 		suffix = '000000000000'
 
-		self.send_commands((f"{prefix}{speaker.value}{mode}{data}{suffix}" for speaker in SpeakerLocation))
+		for speaker in SpeakerLocation:
+			self.send_command(f"{prefix}{speaker.value}{mode}{data}{suffix}")
 
 	def set_intro_effect(self, arg):
 		if arg == 'on' or arg == '1':
@@ -180,7 +186,7 @@ class G560(LogiBase):
 		self.send_command(f'11ff043a0001{toggle}00000000000000000000000000')
 
 
-def main(args=None, **kwargs):
+def main(args=None):
 	from .tools import set_loger_config
 
 	set_loger_config()
