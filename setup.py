@@ -11,7 +11,7 @@ git_url = f"https://github.com/lwashington3/{project_name}"
 
 setup(
 	name=project_name,
-	version="0.0.4",
+	version="0.0.5",
 	author="Len Washington III",
 	description="LogiTech G560 Linux Controller",
 	include_package_data=True,

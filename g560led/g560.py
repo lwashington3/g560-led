@@ -35,6 +35,10 @@ class LogiBase(object):
 		return 10_000
 
 	@property
+	def vendor_id(self) -> int:
+		return 0x046d  # Logitech
+
+	@property
 	def logger(self) -> logging.Logger:
 		return self._logger
 
@@ -62,7 +66,7 @@ class LogiBase(object):
 
 	@staticmethod
 	def process_color(color):
-		return convert_color(color).rgb.replace("#", "")  # TODO: Check if this can be RGBA instead of RGB
+		return Color(rgba=color).rgb.replace("#", "")  # TODO: Check if this can be RGBA instead of RGB
 
 	def send_command(self, data):
 		self.attach_mouse()
@@ -70,8 +74,8 @@ class LogiBase(object):
 		self.detach_mouse()
 
 	def attach_mouse(self):
-		for product_id, product_title in compatible_devices.items():
-			self.device = find(idVendor=vendor_id, idProduct=product_id)
+		for product_id, product_title in self.compatible_devices.items():
+			self.device = find(idVendor=self.vendor_id, idProduct=product_id)
 			if self.device is not None:
 				# print("Found {}".format(product_title))
 				break
@@ -94,9 +98,7 @@ class LogiBase(object):
 
 
 class G560(LogiBase):
-	vendor_id = 0x046d # Logitech
-
-	compatible_devices = {
+	self.compatible_devices = {
 		# 0xc083: "G403 Legacy Mouse",
 		# 0xc08f: "G403 HERO Gaming Mouse",
 		0x0a78: "G560 Gaming Speaker"
