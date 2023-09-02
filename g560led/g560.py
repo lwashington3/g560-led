@@ -182,13 +182,13 @@ def main(args=None, **kwargs):
 
 	match (args[1]):
 		case "solid":
-			g560.set_led_solid(args[2])
+			led.set_led_solid(args[2])
 		case "cycle":
-			g560.set_led_cycle(args[2], args[3])
+			led.set_led_cycle(args[2], args[3])
 		case "breathe":
-			g560.set_led_breathe(args[2], args[3], args[4])
+			led.set_led_breathe(args[2], args[3], args[4])
 		case "intro":
-			g560.set_intro_effect(args[2])
+			led.set_intro_effect(args[2])
 		case _:
 			UnknownLEDModeError(args[1])
 

@@ -1,10 +1,11 @@
 def set_loger_config(log_location:str=None, **kwargs):
 	import logging
 	from os.path import expanduser, join
+	from datetime import datetime as dt
 
 	handlers = (
 		logging.FileHandler(
-			log_location if log_location is not None else join(expanduser('~'), f"g560/logs/{dt.now():%Y-%m-%dT%H:%M:%S}.log"),
+			log_location if log_location is not None else f"/var/g560/logs/{dt.now():%Y-%m-%dT%H:%M:%S}.log",
 			mode='w'),
 		logging.StreamHandler()
 	)

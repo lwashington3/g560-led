@@ -35,3 +35,4 @@ setup(
 		"Programming Language :: Python :: 3.11"
 	]
 )
+# TODO: Create /var/g560/logs directory on installation
