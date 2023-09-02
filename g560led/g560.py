@@ -13,18 +13,32 @@
 import logging
 
 from .errors import *
+from abc import abstractmethod, ABC
 from binascii import unhexlify
 from colors import Color, convert_color
+from enum import StrEnum
 from sys import argv, exit as sys_exit
 from usb.core import find
 from usb.util import claim_interface, release_interface
 
 
-class LogiBase(object):
+class SpeakerLocation(StrEnum):
+	Left_Secondary = '00'
+	Right_Secondary = '01'
+	Left_Primary = '02'
+	Right_Primary = '03'
+
+
+class LogiBase(ABC):
 	def __init__(self, logger=None):
 		self._logger = logger if logger is not None else logging.getLogger(__name__)
 		self.device = None
 		self.wIndex = None
+
+	@property
+	@abstractmethod
+	def compatible_devices(self):
+		pass
 
 	@property
 	def default_brightness(self) -> int:
@@ -69,8 +83,12 @@ class LogiBase(object):
 		return Color(rgba=color).rgb.replace("#", "")  # TODO: Check if this can be RGBA instead of RGB
 
 	def send_command(self, data):
+		self.send_commands([data])
+
+	def send_commands(self, datalist):
 		self.attach_mouse()
-		self.device.ctrl_transfer(0x21, 0x09, 0x0211, self.wIndex, unhexlify(data))
+		for data in datalist:
+			self.device.ctrl_transfer(0x21, 0x09, 0x0211, self.wIndex, unhexlify(data))
 		self.detach_mouse()
 
 	def attach_mouse(self):
@@ -86,7 +104,7 @@ class LogiBase(object):
 		self.wIndex = 0x02
 		if self.device.is_kernel_driver_active(self.wIndex) is True:
 			self.device.detach_kernel_driver(self.wIndex)
-			claim_interface(self.device, wself.Index)
+			claim_interface(self.device, self.wIndex)
 
 	def detach_mouse(self):
 		if self.wIndex is None:
@@ -98,12 +116,6 @@ class LogiBase(object):
 
 
 class G560(LogiBase):
-	self.compatible_devices = {
-		# 0xc083: "G403 Legacy Mouse",
-		# 0xc08f: "G403 HERO Gaming Mouse",
-		0x0a78: "G560 Gaming Speaker"
-	}
-
 	def __init__(self, logger=None):
 		super().__init__(logger=logger)
 
@@ -121,6 +133,14 @@ class G560(LogiBase):
 	\tColor: RRGGBB (RGB hex value)
 	\tRate: 100-60000 (Number of milliseconds. Default: 10000ms)
 	\tBrightness: 0-100 (Percentage. Default: 100%)""")
+
+	@property
+	def compatible_devices(self) -> dict[int, str]:
+		return {
+			# 0xc083: "G403 Legacy Mouse",
+			# 0xc08f: "G403 HERO Gaming Mouse",
+			0x0a78: "G560 Gaming Speaker"
+		}
 
 	def set_led_solid(self, color):
 		if not color:
@@ -145,16 +165,9 @@ class G560(LogiBase):
 
 	def set_led(self, mode, data):
 		prefix = '11ff043a'
-		left_secondary = '00'
-		right_secondary = '01'
-		left_primary = '02'
-		right_primary = '03'
-
 		suffix = '000000000000'
-		self.send_command(prefix + left_secondary + mode + data + suffix)
-		self.send_command(prefix + right_secondary + mode + data + suffix)
-		self.send_command(prefix + left_primary + mode + data + suffix)
-		self.send_command(prefix + right_primary + mode + data + suffix)
+
+		self.send_commands((f"{prefix}{speaker.value}{mode}{data}{suffix}" for speaker in SpeakerLocation))
 
 	def set_intro_effect(self, arg):
 		if arg == 'on' or arg == '1':
