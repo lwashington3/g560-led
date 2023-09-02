@@ -21,8 +21,8 @@ class SpeakerLocation(StrEnum):
 class LEDMode(StrEnum):
 	Solid			= "01"
 	Cycle			= "02"
-	G403_Breathe	= "03"
-	Breathe 		= "04"
+	Breathe			= "03"
+	G560_Breathe 	= "04"
 
 
 class LogiBase(ABC):

@@ -57,7 +57,7 @@ class G560(LogiBase):
 		rate = self.process_rate(rate)
 		brightness = self.process_brightness(brightness)
 
-		return self.set_led(LEDMode.Breathe, f"{color}{rate}00{brightness}00")
+		return self.set_led(LEDMode.G560_Breathe, f"{color}{rate}00{brightness}00")
 
 	def set_led_cycle(self, rate, brightness):
 		rate = self.process_rate(rate)
