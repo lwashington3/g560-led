@@ -19,9 +19,10 @@ class SpeakerLocation(StrEnum):
 
 
 class LEDMode(StrEnum):
-	Solid	= "01"
-	Cycle	= "02"
-	Breathe = "04"
+	Solid			= "01"
+	Cycle			= "02"
+	G403_Breathe	= "03"
+	Breathe 		= "04"
 
 
 class LogiBase(ABC):
@@ -32,7 +33,12 @@ class LogiBase(ABC):
 
 	@property
 	@abstractmethod
-	def compatible_devices(self):
+	def compatible_devices(self) -> dict[int, str]:
+		pass
+
+	@property
+	@abstractmethod
+	def default_wIndex(self) -> int:
 		pass
 
 	@property
@@ -90,14 +96,13 @@ class LogiBase(ABC):
 		for product_id, product_title in self.compatible_devices.items():
 			self.device = find(idVendor=self.vendor_id, idProduct=product_id)
 			if self.device is not None:
-				# print("Found {}".format(product_title))
 				break
 
 		if self.device is None:
-			raise NoCompatibleDeviceError('No compatible devices found.')
+			raise NoCompatibleDeviceError(f'No compatible devices found for: {self.vendor_id:04x}: (' + ",".join(self.compatible_devices.keys()) + ").")
 
-		self.wIndex = 0x02
-		if self.device.is_kernel_driver_active(self.wIndex) is True:
+		self.wIndex = self.default_wIndex
+		if self.device.is_kernel_driver_active(self.wIndex):
 			self.device.detach_kernel_driver(self.wIndex)
 			claim_interface(self.device, self.wIndex)
 

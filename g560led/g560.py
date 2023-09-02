@@ -14,19 +14,22 @@ from sys import exit as sys_exit
 from .logi import *
 
 
+__ALL__ = ["G560", "main"]
+
+
 class G560(LogiBase):
 	def __init__(self, logger=None):
 		super().__init__(logger=logger)
 
 	@staticmethod
 	def help():
-		print("""Logitech G403 Mouse LED control
+		print("""Logitech G560 Gaming Speakers control
 	
 	Usage:
-	\tg403-led solid {color} - Solid color mode
-	\tg403-led cycle [{rate} [{brightness}]] - Cycle through all colors
-	\tg403-led breathe {color} [{rate} [{brightness}]] - Single color breathing
-	\tg403-led intro {on|off} - Enable/disable startup effect
+	\tg560 solid {color} - Solid color mode
+	\tg560 cycle [{rate} [{brightness}]] - Cycle through all colors
+	\tg560 breathe {color} [{rate} [{brightness}]] - Single color breathing
+	\tg560 intro {on|off} - Enable/disable startup effect
 	
 	Arguments:
 	\tColor: RRGGBB (RGB hex value)
@@ -36,10 +39,12 @@ class G560(LogiBase):
 	@property
 	def compatible_devices(self) -> dict[int, str]:
 		return {
-			# 0xc083: "G403 Legacy Mouse",
-			# 0xc08f: "G403 HERO Gaming Mouse",
 			0x0a78: "G560 Gaming Speaker"
 		}
+
+	@property
+	def default_wIndex(self) -> int:
+		return 0x02
 
 	def set_led_solid(self, color):
 		if not color:

@@ -11,7 +11,7 @@ git_url = f"https://github.com/lwashington3/{project_name}"
 
 setup(
 	name=project_name,
-	version="0.1.2",
+	version="0.2.0",
 	author="Len Washington III",
 	description="LogiTech G560 Linux Controller",
 	include_package_data=True,
@@ -33,6 +33,6 @@ setup(
 	},
 	classifiers=[
 		"Programming Language :: Python :: 3.11"
-	]
+	],
+	data_files=[("/var/g560", ["logs"])]
 )
-# TODO: Create /var/g560/logs directory on installation
