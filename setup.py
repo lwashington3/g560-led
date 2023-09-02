@@ -5,7 +5,7 @@ with open("README.md", 'r') as f:
 	long_description = f.read()
 
 
-project_name = "g560-led"
+project_name = "g560led"
 git_url = f"https://github.com/lwashington3/{project_name}"
 
 
